@@ -1,4 +1,4 @@
-package mail;
+package model;
 
 import java.util.List;
 

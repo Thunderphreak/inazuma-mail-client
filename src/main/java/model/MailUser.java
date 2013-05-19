@@ -1,4 +1,4 @@
-package mail;
+package model;
 
 public class MailUser extends Mail
 {

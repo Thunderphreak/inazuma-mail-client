@@ -1,4 +1,4 @@
-package mail;
+package model;
 
 public enum MailType
 {

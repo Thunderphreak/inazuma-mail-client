@@ -1,25 +1,33 @@
 package main;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import util.Config;
+import util.NamedThreadFactory;
+import controller.GetMailIDsFromRandomUser;
+import controller.GetRandomMails;
+import controller.CreateRandomMails;
+
+
 public class Main
 {
-	/*
 	public static void main(String[] args)
 	{
 		final long runtime = Config.RUNTIME;
-		final CouchbaseClient client = ConnectionManager.getConnection();
 
-		// Startup mail storage threads
-		MailStorage mailStorageQueue = new MailStorage(client, Config.STORAGE_THREADS, Config.MAX_RETRIES);
-		
 		// Configure thread pools
 		ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(2, new NamedThreadFactory("ScheduledPool"));
-		//threadPool.submit(new ClusterStatusJob(threadPool, client));
+		GetRandomMails getMails = new GetRandomMails(threadPool);
+		threadPool.submit(new GetMailIDsFromRandomUser(threadPool, getMails));
+		threadPool.submit(getMails);
 
-		System.out.println("Creating mails for " + runtime + " ms...");
+		System.out.println("Running for " + runtime + " ms...");
 		ScheduledExecutorService threadPoolCreation = Executors.newScheduledThreadPool(10, new NamedThreadFactory("MailCreation"));
 		for (int i = 0; i < Config.CREATION_JOBS; ++i)
 		{
-			threadPoolCreation.submit(new MailCreationJob(threadPoolCreation, mailStorageQueue));
+			threadPoolCreation.submit(new CreateRandomMails(threadPoolCreation));
 		}
 		
 		// Wait until runtime is over
@@ -42,24 +50,7 @@ public class Main
 		}
 		catch (InterruptedException e)
 		{
-			e.printStackTrace();
 		}
 		System.out.println("Done!\n");
-		
-		// Shutdown storage threads
-		System.out.println("Shutting down storage threads...");
-		mailStorageQueue.shutdown();
-		mailStorageQueue.awaitShutdown();
-		System.out.println("Done!\n");
-
-		// Statistics
-		(new MailCheckJob()).run();
-		System.out.println();
-		
-		// Shutdown of connection manager
-		System.out.println("Shutting down ConnectionManager...");
-		ConnectionManager.shutdown();
-		System.out.println("Done!\n");
 	}
-	*/
 }
