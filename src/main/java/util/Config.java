@@ -6,8 +6,8 @@ public class Config
 {
 	public static final long RUNTIME = TimeUnit.SECONDS.toMillis(30);
 	
-	public static final int CREATION_JOBS = 10;
-	public static final int CREATION_DELAY = 100;
+	public static final int CREATION_JOBS = 20;
+	public static final int CREATION_DELAY = 10;
 	public static final TimeUnit CREATION_TIMEUNIT = TimeUnit.MICROSECONDS;
 
 	public static final int STORAGE_THREADS = 10;
