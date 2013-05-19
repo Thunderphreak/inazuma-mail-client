@@ -7,12 +7,20 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 
+import model.Mail;
+import model.MailAdapter;
+import model.MailTrade;
+import model.MailUser;
+
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import util.Config;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class GetRandomMails implements Runnable
 {
@@ -23,10 +31,15 @@ public class GetRandomMails implements Runnable
 	private static final ConcurrentHashMap<Integer, HashSet<String>> mailKeys = new ConcurrentHashMap<>();
 
 	private final ScheduledExecutorService threadPool;
+	private final Gson gson;
 
 	public GetRandomMails(final ScheduledExecutorService threadPool)
 	{
 		this.threadPool = threadPool;
+		
+		final GsonBuilder gsonBilder = new GsonBuilder();
+		gsonBilder.registerTypeAdapter(Mail.class, new MailAdapter());
+		this.gson = gsonBilder.create();
 	}
 
 	@Override
@@ -54,7 +67,15 @@ public class GetRandomMails implements Runnable
 			try
 			{
 				final String responseBody = httpclient.execute(httpGet, responseHandler);
-				System.out.println(responseBody);
+				final Mail mail = gson.fromJson(responseBody, Mail.class);
+				if (mail instanceof MailUser)
+				{
+					//System.out.println(((MailUser) mail).getSubject());
+				}
+				else if (mail instanceof MailTrade)
+				{
+					//System.out.println(((MailTrade) mail).getItems());
+				}
 			}
 			catch (IOException e)
 			{
