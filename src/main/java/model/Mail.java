@@ -1,24 +1,27 @@
 package model;
 
-import java.util.UUID;
-
 public abstract class Mail
 {
-	protected final transient UUID key;
-	protected final MailType mailType;
-	protected final int senderID;
-	protected final int receiverID;
-	protected final long created;
+	private final MailType mailType;
+	private final int senderID;
+	private final int receiverID;
+	private final long created;
 	
+	private transient String key;
+
 	protected Mail(final MailType mailType, final int senderID, final int receiverID)
 	{
-		this.key = UUID.randomUUID();
 		this.mailType = mailType;
 		this.senderID = senderID;
 		this.receiverID = receiverID;
 		this.created = System.currentTimeMillis() / 1000;
 	}
 	
+	public void setKey(final String key)
+	{
+		this.key = key;
+	}
+
 	public String getKey()
 	{
 		return key.toString();
